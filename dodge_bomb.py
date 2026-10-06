@@ -50,20 +50,20 @@ def gameover(screen: pg.Surface) -> None:
     gameover_bg.set_alpha(100)
     screen.blit(gameover_bg, (0, 0))
 
-    font = pg.font.Font(None, 120)
+    font = pg.font.Font(None, 100)
     txt_img = font.render("Game Over", True, (255, 255, 255))
     txt_rct = txt_img.get_rect()
     txt_rct.center = (WIDTH // 2, HEIGHT // 2)
     screen.blit(txt_img, txt_rct)
 
-    kk_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 1.5)
     
     kk_rct_l = kk_img.get_rect()
-    kk_rct_l.center = (WIDTH // 2 - 300, HEIGHT // 2)
+    kk_rct_l.center = (WIDTH // 2 - 250, HEIGHT // 2)
     screen.blit(kk_img, kk_rct_l)
     
     kk_rct_r = kk_img.get_rect()
-    kk_rct_r.center = (WIDTH // 2 + 300, HEIGHT // 2)
+    kk_rct_r.center = (WIDTH // 2 + 250, HEIGHT // 2)
     screen.blit(kk_img, kk_rct_r)
 
     pg.display.update()
