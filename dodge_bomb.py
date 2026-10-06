@@ -25,6 +25,26 @@ def check_bound(rect:pg.Rect) -> tuple[bool,bool]:
     return yoko,tate
 
 
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    bb_imgs = []
+    for r in range(1, 11):
+        bb_img = pg.Surface((20 * r, 20 * r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10 * r, 10 * r), 10 * r)
+        bb_img.set_colorkey((0, 0, 0))
+        bb_imgs.append(bb_img)
+    
+    bb_accs = [a for a in range(1, 11)]
+    return bb_imgs, bb_accs
+
+
+def draw_time(screen: pg.Surface, tmr: int) -> None:
+    font = pg.font.Font(None,77)
+    score = tmr // 50  
+    txt_img = font.render(f"Time: {score}", True, (1, 0, 0))
+    screen.blit(txt_img, (1, 1))
+
+
+
 def gameover(screen: pg.Surface) -> None:
     gameover_bg = pg.Surface((WIDTH, HEIGHT))
     gameover_bg.set_alpha(200)
@@ -72,6 +92,8 @@ def main():
     pg.draw.circle(bb_img,(255,0,0),(10,10),10)
     bb_img.set_colorkey((0,0,0))
     bb_rct =bb_img.get_rect()
+    bb_imgs, bb_accs = init_bb_imgs()
+    bb_rct = bb_imgs[0].get_rect()
     bb_rct.centerx = (random.randint(0,WIDTH))
     bb_rct.centery = (random.randint(0,HEIGHT))
     vx,vy =+5,+5
@@ -95,17 +117,32 @@ def main():
             if key_lst[k]:
                 sum_mv[0] += tpl[0] #横方向移動量
                 sum_mv[1] += tpl[1] #縦方向移動量
+        
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True,True): #どこかにはみでる
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        bb_rct.move_ip(vx,vy)
+
+        idx = min(tmr // 200, 20)
+        
+        # 加速後の移動量を計算
+        avx = vx * bb_accs[idx]
+        avy = vy * bb_accs[idx]
+        
+        # 現在の段階に対応する爆弾Surfaceの取得とサイズ更新
+        bb_img = bb_imgs[idx]
+        bb_rct.width = bb_img.get_rect().width
+        bb_rct.height = bb_img.get_rect().height
+
+        bb_rct.move_ip(avx,avy)
         yoko,tate = check_bound(bb_rct)
         if not yoko:
             vx *= -1
         if not tate:
             vy *= -1
         screen.blit(bb_img, bb_rct)
+        draw_time(screen, tmr)
+
         pg.display.update()
         tmr += 1
         clock.tick(50)
