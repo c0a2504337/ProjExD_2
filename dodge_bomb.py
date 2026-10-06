@@ -15,6 +15,7 @@ DELTA={
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
+
 def check_bound(rect:pg.Rect) -> tuple[bool,bool]:
     yoko,tate = True,True
     if rect.left < 0 or WIDTH < rect.right:
@@ -22,6 +23,42 @@ def check_bound(rect:pg.Rect) -> tuple[bool,bool]:
     if rect.top < 0 or HEIGHT < rect.bottom:
         tate = False
     return yoko,tate
+
+
+def gameover(screen: pg.Surface) -> None:
+    gameover_bg = pg.Surface((WIDTH, HEIGHT))
+    gameover_bg.set_alpha(200)
+    gameover_bg.fill((0, 0, 0))
+    screen.blit(gameover_bg, (0, 0))
+
+    font = pg.font.Font(None, 100)
+    txt_img = font.render("Game Over", True, (255, 255, 255))
+    txt_rct = txt_img.get_rect()
+    txt_rct.center = (WIDTH // 2, HEIGHT // 2)
+    screen.blit(txt_img, txt_rct)
+
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
+    
+    kk_rct_l = kk_img.get_rect()
+    kk_rct_l.center = (WIDTH // 2 - 300, HEIGHT // 2)
+    screen.blit(kk_img, kk_rct_l)
+    
+    kk_rct_r = kk_img.get_rect()
+    kk_rct_r.center = (WIDTH // 2 + 300, HEIGHT // 2)
+    screen.blit(kk_img, kk_rct_r)
+
+    # 4. 画面を更新
+    pg.display.update()
+
+    start_time = pg.time.get_ticks()
+    clock = pg.time.Clock()
+
+    while pg.time.get_ticks() - start_time < 5000:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+        clock.tick(60)
 
 
 def main():
@@ -48,7 +85,7 @@ def main():
         screen.blit(bg_img, [0, 0]) 
 
         if kk_rct.colliderect(bb_rct):
-            print("game over")
+            gameover(screen)
             return
 
         key_lst = pg.key.get_pressed()
