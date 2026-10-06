@@ -15,7 +15,6 @@ DELTA={
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
-
 def check_bound(rect:pg.Rect) -> tuple[bool,bool]:
     yoko,tate = True,True
     if rect.left < 0 or WIDTH < rect.right:
