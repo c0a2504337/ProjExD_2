@@ -47,11 +47,10 @@ def draw_time(screen: pg.Surface, tmr: int) -> None:
 
 def gameover(screen: pg.Surface) -> None:
     gameover_bg = pg.Surface((WIDTH, HEIGHT))
-    gameover_bg.set_alpha(200)
-    gameover_bg.fill((0, 0, 0))
+    gameover_bg.set_alpha(100)
     screen.blit(gameover_bg, (0, 0))
 
-    font = pg.font.Font(None, 100)
+    font = pg.font.Font(None, 120)
     txt_img = font.render("Game Over", True, (255, 255, 255))
     txt_rct = txt_img.get_rect()
     txt_rct.center = (WIDTH // 2, HEIGHT // 2)
@@ -67,7 +66,6 @@ def gameover(screen: pg.Surface) -> None:
     kk_rct_r.center = (WIDTH // 2 + 300, HEIGHT // 2)
     screen.blit(kk_img, kk_rct_r)
 
-    # 4. 画面を更新
     pg.display.update()
 
     start_time = pg.time.get_ticks()
